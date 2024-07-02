@@ -1,7 +1,12 @@
-import SidebarAndNavbarMenu from "./components/views/sidebarAndNavbarMenu";
+// import Menu from "./views/Menu";
+
+import Login from "./pages/login";
 
 function App() {
-  return <SidebarAndNavbarMenu />;
+  return (
+    <Login />
+    // <Menu />
+  ) 
 }
 
 export default App;

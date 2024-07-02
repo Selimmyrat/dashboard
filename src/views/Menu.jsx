@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function SidebarAndNavbarMenu() {
+export default function Menu() {
   return (
     <div className="grid h-screen w-full pl-[56px]">
       <aside className="inset-y fixed left-0 z-20 flex h-full flex-col border-r">
