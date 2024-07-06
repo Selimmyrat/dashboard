@@ -15,7 +15,6 @@ const router = createBrowserRouter([
     ],
   },
   { path: "/auth", element: <Auth /> },
-  // { path: "/table", element: <Table />}
 ]);
 
 export default function App() {
