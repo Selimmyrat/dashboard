@@ -24,7 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 // eslint-disable-next-line react/prop-types
 export default function Menu({ children }) {
   const [open, setOpen] = useState(true);
@@ -94,17 +94,18 @@ export default function Menu({ children }) {
                     </TooltipProvider>
                   </div>
                 </NavLink>
-                <span
-                  className={`${
-                    !open && "hidden"
-                  } pl-2 origin-left duration-200`}
-                >
-                  Dashboard
-                </span>
+                <Link to="/">
+                  <span
+                    className={`${
+                      !open && "hidden"
+                    } pl-2 origin-left duration-200`}
+                  >
+                    Dashboard
+                  </span>
+                </Link>
               </li>
               <li
-                className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-sm items-center 
-          `}
+                className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-sm items-center`}
               >
                 <NavLink
                   to="/users"
@@ -133,13 +134,15 @@ export default function Menu({ children }) {
                     </TooltipProvider>
                   </div>
                 </NavLink>
-                <span
-                  className={`${
-                    !open && "hidden"
-                  } pl-2 origin-left duration-200`}
-                >
-                  Users
-                </span>
+                <Link to="/users">
+                  <span
+                    className={`${
+                      !open && "hidden"
+                    } pl-2 origin-left duration-200`}
+                  >
+                    Users
+                  </span>
+                </Link>
               </li>
               <li
                 className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-sm items-center 

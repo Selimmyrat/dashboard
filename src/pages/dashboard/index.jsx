@@ -7,11 +7,11 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  BarChart,
+  Bar,
+  BarChart
 } from "recharts";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-
 const data = [
   {
     name: "Page A",
@@ -82,9 +82,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      
-
-      <div className="mx-auto">
+      <div className="bg-white mt-2 shadow-sm border">
         <Card>
           <CardHeader>Active Users</CardHeader>
           <CardContent className="h-72 w-full">
@@ -124,6 +122,23 @@ export default function Dashboard() {
                   activeDot={{ r: 8 }}
                 />
               </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="bg-white mt-2 shadow-sm border">
+        <Card>
+          <CardHeader>Active Users</CardHeader>
+          <CardContent className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="tagan" fill="#8884d8" />
+              </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
