@@ -2,6 +2,7 @@ import {
   ArrowRight,
   HomeIcon,
   LineChart,
+  LucideFileSpreadsheet,
   Triangle,
   User,
   Users,
@@ -63,38 +64,38 @@ export default function Menu({ children }) {
               onClick={() => setOpen(!open)}
             />
             <ul className="">
-              <li
-                className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-sm items-center 
-          `}
-              >
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "bg-slate-200 rounded-xl"
-                      : "hover:bg-slate-200 rounded-xl"
-                  }
-                  end
+              <Link to="/">
+                <li
+                  className={`flex rounded-xl p-2 cursor-pointer hover:bg-slate-100 text-sm items-center`}
                 >
-                  <div className="flex items-center justify-center px-2 py-2 rounded-xl ">
-                    <TooltipProvider delayDuration={10}>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <HomeIcon strokeWidth={1.3} />
-                        </TooltipTrigger>
-                        {!open ? (
-                          <TooltipContent
-                            side="right"
-                            className="flex items-center justify-center bg-white border rounded-xl m-5"
-                          >
-                            <p className="">Dashboard</p>
-                          </TooltipContent>
-                        ) : null}
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </NavLink>
-                <Link to="/">
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "bg-slate-100 rounded-xl"
+                        : ""
+                    }
+                    end
+                  >
+                    <div className="flex items-center justify-center px-2 py-2 rounded-xl ">
+                      <TooltipProvider delayDuration={10}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HomeIcon strokeWidth={1.3} />
+                          </TooltipTrigger>
+                          {!open ? (
+                            <TooltipContent
+                              side="right"
+                              className="flex items-center justify-center bg-white border rounded-xl m-5"
+                            >
+                              <p className="">Dashboard</p>
+                            </TooltipContent>
+                          ) : null}
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </NavLink>
+
                   <span
                     className={`${
                       !open && "hidden"
@@ -102,39 +103,40 @@ export default function Menu({ children }) {
                   >
                     Dashboard
                   </span>
-                </Link>
-              </li>
-              <li
-                className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-sm items-center`}
-              >
-                <NavLink
-                  to="/users"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "bg-slate-200 rounded-xl"
-                      : "hover:bg-slate-200 rounded-xl"
-                  }
-                  end
+                </li>
+              </Link>
+              <Link to="/users">
+                <li
+                  className={`flex rounded-xl p-2 cursor-pointer hover:bg-slate-100 text-sm items-center`}
                 >
-                  <div className="flex items-center justify-center px-2 py-2 rounded-xl hover:bg-slate-200">
-                    <TooltipProvider delayDuration={10}>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Users strokeWidth={1.3} />
-                        </TooltipTrigger>
-                        {!open ? (
-                          <TooltipContent
-                            side="right"
-                            className="flex items-center justify-center bg-white border rounded-xl m-5"
-                          >
-                            <p className="">Users</p>
-                          </TooltipContent>
-                        ) : null}
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </NavLink>
-                <Link to="/users">
+                  <NavLink
+                    to="/users"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "bg-slate-100 rounded-xl"
+                        : ""
+                    }
+                    end
+                  >
+                    <div className="flex items-center justify-center px-2 py-2 rounded-xl hover:bg-slate-100">
+                      <TooltipProvider delayDuration={10}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Users strokeWidth={1.3} />
+                          </TooltipTrigger>
+                          {!open ? (
+                            <TooltipContent
+                              side="right"
+                              className="flex items-center justify-center bg-white border rounded-xl m-5"
+                            >
+                              <p className="">Users</p>
+                            </TooltipContent>
+                          ) : null}
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </NavLink>
+
                   <span
                     className={`${
                       !open && "hidden"
@@ -142,47 +144,90 @@ export default function Menu({ children }) {
                   >
                     Users
                   </span>
-                </Link>
-              </li>
-              <li
-                className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-sm items-center 
+                </li>
+              </Link>
+              <Link to="/sprints">
+                <li
+                  className={`flex rounded-xl p-2 cursor-pointer hover:bg-slate-100 text-sm items-center`}
+                >
+                  <NavLink
+                    to="/sprints"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "bg-slate-100 rounded-xl"
+                        : ""
+                    }
+                    end
+                  >
+                    <div className="flex items-center justify-center px-2 py-2 rounded-xl hover:bg-slate-100">
+                      <TooltipProvider delayDuration={10}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <LucideFileSpreadsheet strokeWidth={1.3} />
+                          </TooltipTrigger>
+                          {!open ? (
+                            <TooltipContent
+                              side="right"
+                              className="flex items-center justify-center bg-white border rounded-xl m-5"
+                            >
+                              <p className="">Sprints</p>
+                            </TooltipContent>
+                          ) : null}
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </NavLink>
+
+                  <span
+                    className={`${
+                      !open && "hidden"
+                    } pl-2 origin-left duration-200`}
+                  >
+                    Sprints
+                  </span>
+                </li>
+              </Link>
+              <Link to="/auth">
+                <li
+                  className={`flex rounded-xl p-2 cursor-pointer hover:bg-slate-100 text-sm items-center 
           `}
-              >
-                <NavLink
-                  to="/auth"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "bg-slate-200 rounded-xl"
-                      : "hover:bg-slate-200 rounded-xl"
-                  }
-                  end
                 >
-                  <div className="flex items-center justify-center px-2 py-2 rounded-xl hover:bg-slate-200">
-                    <TooltipProvider delayDuration={10}>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <LineChart strokeWidth={1.3} />
-                        </TooltipTrigger>
-                        {!open ? (
-                          <TooltipContent
-                            side="right"
-                            className="flex items-center justify-center bg-white border rounded-xl m-5"
-                          >
-                            <p className="">Analytics</p>
-                          </TooltipContent>
-                        ) : null}
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </NavLink>
-                <span
-                  className={`${
-                    !open && "hidden"
-                  } pl-2 origin-left duration-200`}
-                >
-                  Analytics
-                </span>
-              </li>
+                  <NavLink
+                    to="/auth"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "bg-slate-100 rounded-xl"
+                        : ""
+                    }
+                    end
+                  >
+                    <div className="flex items-center justify-center px-2 py-2 rounded-xl hover:bg-slate-100">
+                      <TooltipProvider delayDuration={10}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <LineChart strokeWidth={1.3} />
+                          </TooltipTrigger>
+                          {!open ? (
+                            <TooltipContent
+                              side="right"
+                              className="flex items-center justify-center bg-white border rounded-xl m-5"
+                            >
+                              <p className="">Analytics</p>
+                            </TooltipContent>
+                          ) : null}
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </NavLink>
+                  <span
+                    className={`${
+                      !open && "hidden"
+                    } pl-2 origin-left duration-200`}
+                  >
+                    Analytics
+                  </span>
+                </li>
+              </Link>
             </ul>
           </div>
         </nav>

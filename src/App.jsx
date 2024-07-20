@@ -4,6 +4,7 @@ import Auth from "./pages/auth";
 import Users from "./pages/users";
 import Dashboard from "./pages/dashboard";
 import Root from "./routes/Root";
+import Sprints from "./pages/sprints";
 
 const router = createBrowserRouter([
   {
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "/users", element: <Users /> },
+      { path: "/sprints", element: <Sprints /> },
     ],
   },
   { path: "/auth", element: <Auth /> },

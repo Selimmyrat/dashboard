@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import ProgressBar from "@ramonak/react-progress-bar";
+
 import {
   Table,
   TableBody,
@@ -19,7 +21,6 @@ import {
 } from "@/components/ui/dialog";
 
 import { Eye } from "lucide-react";
-
 export default function Users() {
   // const [users, setUsers] = useState([]);
   const [dataByUsers, setDataByUsers] = useState({});
@@ -61,6 +62,11 @@ export default function Users() {
   }, []);
 
   console.log(dataByUsers);
+
+  function calcPercentage(closedIssues, totalIssues) {
+    const precentage = (closedIssues / totalIssues) * 100;
+    return Math.round(precentage);
+  }
 
   return (
     <div className="bg-white border shadow-sm p-4">
@@ -107,6 +113,9 @@ export default function Users() {
                                   Closed Issues
                                 </TableHead>
                                 <TableHead className="text-center">
+                                  Progress
+                                </TableHead>
+                                <TableHead className="text-center">
                                   Closed Points
                                 </TableHead>
                               </TableRow>
@@ -127,6 +136,15 @@ export default function Users() {
                                     </TableCell>
                                     <TableCell>
                                       {sprint_data.closed_issues}
+                                    </TableCell>
+                                    <TableCell>
+                                      <ProgressBar
+                                        completed={calcPercentage(
+                                          sprint_data.closed_issues,
+                                          sprint_data.total_issues
+                                        )}
+                                        bgColor={"#228B22"}
+                                      />
                                     </TableCell>
                                     <TableCell>
                                       {sprint_data.closed_points}

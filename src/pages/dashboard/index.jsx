@@ -8,56 +8,73 @@ import {
   Legend,
   ResponsiveContainer,
   Bar,
-  BarChart
+  BarChart,
 } from "recharts";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-const data = [
-  {
-    name: "Page A",
-    aky: 4000,
-    owez: 3000,
-    tagan: 2400,
-  },
-  {
-    name: "Page B",
-    aky: 3000,
-    owez: 4000,
-    tagan: 1398,
-  },
-  {
-    name: "Page C",
-    aky: 2000,
-    owez: 1500,
-    tagan: 9800,
-  },
-  {
-    name: "Page D",
-    aky: 2780,
-    owez: 4180,
-    tagan: 3908,
-  },
-  {
-    name: "Page E",
-    aky: 1890,
-    owez: 190,
-    tagan: 4800,
-  },
-  {
-    name: "Page F",
-    aky: 2390,
-    owez: 3390,
-    tagan: 3800,
-  },
-  {
-    name: "Page G",
-    aky: 3490,
-    owez: 2290,
-    tagan: 4300,
-  },
-];
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
+  const [dataBySprint, setDataBySprint] = useState();
+  const [dataByTotalIssues, setDataByTotalIssues] = useState();
+  const [dataByProgress, setDataByProgress] = useState();
+
+  useEffect(() => {
+    fetch("https://pb.mekdep.org/api/collections/team_sprint_statistic/records")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        const obj = {};
+
+        data.items.forEach((element) => {
+          const sprint = element.sprint_number;
+          if (!obj[sprint]) {
+            obj[sprint] = [];
+          }
+          obj[sprint].push(element);
+        });
+
+        const sprintChartData = [];
+        const totalIssues = [];
+        const progress = [];
+
+        Object.entries(obj).map(([key, value]) => {
+          const chartObj = {};
+          chartObj.sprint = key + " sprint";
+          value.map((item) => {
+            const member = item.team_member;
+            chartObj[member] = item.closed_points;
+          });
+          sprintChartData.push(chartObj);
+        });
+        setDataBySprint(sprintChartData);
+
+        Object.entries(obj).map(([key, value]) => {
+          const chartObj = {};
+          chartObj.sprint = key + " sprint";
+          value.map((item) => {
+            const member = item.team_member;
+            chartObj[member] = item.total_issues;
+          });
+          totalIssues.push(chartObj);
+        });
+        setDataByTotalIssues(totalIssues);
+
+        Object.entries(obj).map(([key, value]) => {
+          const chartObj = {};
+          chartObj.sprint = key + " sprint";
+          value.map((item) => {
+            const member = item.team_member;
+            chartObj[member] = Math.round(
+              (item.closed_issues / item.total_issues) * 100
+            );
+          });
+          progress.push(chartObj);
+        });
+        setDataByProgress(progress);
+      });
+  }, []);
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -82,15 +99,15 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <div className="bg-white mt-2 shadow-sm border">
-        <Card>
-          <CardHeader>Active Users</CardHeader>
+      <div className="mt-2 grid grid-cols-2 gap-4">
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Closed Points</CardHeader>
           <CardContent className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 width={500}
                 height={300}
-                data={data}
+                data={dataBySprint}
                 margin={{
                   top: 5,
                   right: 30,
@@ -99,26 +116,95 @@ export default function Dashboard() {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="sprint" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
+
                 <Line
                   type="monotone"
-                  dataKey="tagan"
+                  dataKey="akynyaz yazmyradov"
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
                 />
                 <Line
                   type="monotone"
-                  dataKey="owez"
+                  dataKey="nazym maksadov"
                   stroke="#82ca9d"
                   activeDot={{ r: 8 }}
                 />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Closed Points</CardHeader>
+          <CardContent className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={dataBySprint}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="akynyaz yazmyradov" fill="#8884d8" />
+                <Bar dataKey="nazym maksadov" fill="#82ca9d" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-4">
+      <Card className="bg-white boreder shadow">
+          <CardHeader>Total Issues</CardHeader>
+          <CardContent className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={dataByTotalIssues}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="akynyaz yazmyradov" fill="#8884d8" />
+                <Bar dataKey="nazym maksadov" fill="#82ca9d" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Total Issues</CardHeader>
+          <CardContent className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                width={500}
+                height={300}
+                data={dataByTotalIssues}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+
                 <Line
                   type="monotone"
-                  dataKey="aky"
+                  dataKey="akynyaz yazmyradov"
                   stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="nazym maksadov"
+                  stroke="#82ca9d"
                   activeDot={{ r: 8 }}
                 />
               </LineChart>
@@ -126,23 +212,65 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-      <div className="bg-white mt-2 shadow-sm border">
-        <Card>
-          <CardHeader>Active Users</CardHeader>
+
+      <div className="mt-5 grid grid-cols-2 gap-4">
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Progress</CardHeader>
           <CardContent className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart width={150} height={40} data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+              <LineChart
+                width={500}
+                height={300}
+                data={dataByProgress}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="tagan" fill="#8884d8" />
+
+                <Line
+                  type="monotone"
+                  dataKey="akynyaz yazmyradov"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="nazym maksadov"
+                  stroke="#82ca9d"
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Progress</CardHeader>
+          <CardContent className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={dataByProgress}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="akynyaz yazmyradov" fill="#8884d8" />
+                <Bar dataKey="nazym maksadov" fill="#82ca9d" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
+
+     
     </>
   );
 }
