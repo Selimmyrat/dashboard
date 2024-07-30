@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-
 import ProgressBar from "@ramonak/react-progress-bar";
+import { Eye } from "lucide-react";
 
 import {
   Table,
@@ -20,9 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Eye } from "lucide-react";
 export default function Users() {
-  // const [users, setUsers] = useState([]);
   const [dataByUsers, setDataByUsers] = useState({});
   const [totalPoints, setTotalPoints] = useState({});
   const [totalIssues, setTotalIssues] = useState({});
@@ -33,7 +31,6 @@ export default function Users() {
         return res.json();
       })
       .then((data) => {
-        // setUsers(data.items);
         const obj = {};
         const totalPointsObj = {};
         const totalIssuesObj = {};
@@ -60,8 +57,6 @@ export default function Users() {
         setTotalIssues(totalIssuesObj);
       });
   }, []);
-
-  console.log(dataByUsers);
 
   function calcPercentage(closedIssues, totalIssues) {
     const precentage = (closedIssues / totalIssues) * 100;

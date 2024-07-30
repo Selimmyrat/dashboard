@@ -93,7 +93,6 @@ export default function Dashboard() {
           FWL[addFWL].push(element);
         });
         setDataByFWL(FWL);
-        console.log(FWL)
       });
   }, []);
   function change(e) {
@@ -120,6 +119,7 @@ export default function Dashboard() {
     }
   }
 
+  console.log(Object.keys(dataByFWL));
   return (
     <>
       <div className="border bg-white shadow p-2 flex flex-row items-center gap-1">
@@ -131,6 +131,7 @@ export default function Dashboard() {
               FWL {value}
             </option>
           ))}
+          {/* <option value="3">FWL-3</option> */}
         </select>
       </div>
       {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

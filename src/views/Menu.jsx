@@ -64,6 +64,47 @@ export default function Menu({ children }) {
               onClick={() => setOpen(!open)}
             />
             <ul className="">
+              {/* <Link to="/">
+                <li
+                  className={`flex rounded-xl p-2 cursor-pointer hover:bg-slate-100 text-sm items-center`}
+                >
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "bg-slate-100 rounded-xl"
+                        : ""
+                    }
+                    end
+                  >
+                    <div className="flex items-center justify-center px-2 py-2 rounded-xl ">
+                      <TooltipProvider delayDuration={10}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HomeIcon strokeWidth={1.3} />
+                          </TooltipTrigger>
+                          {!open ? (
+                            <TooltipContent
+                              side="right"
+                              className="flex items-center justify-center bg-white border rounded-xl m-5"
+                            >
+                              <p className="">Dashboard</p>
+                            </TooltipContent>
+                          ) : null}
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </NavLink>
+
+                  <span
+                    className={`${
+                      !open && "hidden"
+                    } pl-2 origin-left duration-200`}
+                  >
+                    Dashboard
+                  </span>
+                </li>
+              </Link> */}
               <Link to="/">
                 <li
                   className={`flex rounded-xl p-2 cursor-pointer hover:bg-slate-100 text-sm items-center`}
