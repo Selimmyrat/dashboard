@@ -26,6 +26,23 @@ export default function Users() {
   const [totalIssues, setTotalIssues] = useState({});
 
   useEffect(() => {
+    fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        // const contributors = [];
+        console.log(data)
+
+        data.items.content.sprint.forEach((contributorsData) => {
+          // const contributor = contributorsData.content.sprint.contributors;
+          // contributors[contributor].push(contributorsData);
+          console.log("ssssssss", contributorsData)
+        });
+      });
+  }, []);
+
+  useEffect(() => {
     fetch("https://pb.mekdep.org/api/collections/team_sprint_statistic/records")
       .then((res) => {
         return res.json();
@@ -34,6 +51,8 @@ export default function Users() {
         const obj = {};
         const totalPointsObj = {};
         const totalIssuesObj = {};
+        console.log(data)
+        
 
         data.items.forEach((element) => {
           const member = element.team_member;
@@ -55,6 +74,9 @@ export default function Users() {
         setDataByUsers(obj);
         setTotalPoints(totalPointsObj);
         setTotalIssues(totalIssuesObj);
+        console.log("obj", obj)
+        console.log("totalPointsObj", totalPointsObj)
+        console.log("totalIssuesObj", totalIssuesObj)
       });
   }, []);
 
