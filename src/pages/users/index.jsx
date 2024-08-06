@@ -24,6 +24,8 @@ export default function Users() {
   const [dataByUsers, setDataByUsers] = useState({});
   const [dataByTotalPoints, setDataByTotalPoints] = useState({});
   const [dataByTotalIssues, setDataByTotalIssues] = useState({});
+  const [dataByClosedIssues, setDataByClosedIssues] = useState({});
+  const [dataByClosedPoints, setDataByClosedPoints] = useState({});
 
   useEffect(() => {
     fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records")
@@ -34,9 +36,10 @@ export default function Users() {
         const obj = {};
         const totalPtsObj = {};
         const totalIssuesObj = {};
+        const closedIssuesObj = {};
+        const closedPointsObj = {};
         data.items.forEach((cons) => {
           const members = cons.content.sprint.contributors;
-          const sprintData = cons.content.sprint;
           Object.keys(members).forEach((member) => {
             if (!obj[member]) {
               obj[member] = [];
@@ -44,7 +47,7 @@ export default function Users() {
 
             obj[member].push({
               ...members[member],
-              sprintName: sprintData.name,
+              sprintName: cons.name,
             });
 
             if (!totalPtsObj[member]) {
@@ -56,11 +59,23 @@ export default function Users() {
               totalIssuesObj[member] = 0;
             }
             totalIssuesObj[member] += members[member].total_issues;
+
+            if (!closedIssuesObj[member]) {
+              closedIssuesObj[member] = 0;
+            }
+            closedIssuesObj[member] += members[member].closed_issues;
+
+            if (!closedPointsObj[member]) {
+              closedPointsObj[member] = 0;
+            }
+            closedPointsObj[member] += members[member].closed_pts;
           });
         });
         setDataByUsers(obj);
         setDataByTotalPoints(totalPtsObj);
         setDataByTotalIssues(totalIssuesObj);
+        setDataByClosedIssues(closedIssuesObj);
+        setDataByClosedPoints(closedPointsObj);
       });
   }, []);
 
@@ -72,6 +87,8 @@ export default function Users() {
             <TableHead className="text-center">Name</TableHead>
             <TableHead className="text-center">Total Issues</TableHead>
             <TableHead className="text-center">Total Points</TableHead>
+            <TableHead className="text-center">Closed Issues</TableHead>
+            <TableHead className="text-center">Closed Points</TableHead>
             <TableHead className="text-center">Gor</TableHead>
           </TableRow>
         </TableHeader>
@@ -81,8 +98,10 @@ export default function Users() {
               return (
                 <TableRow key={contributors} className="hover:bg-slate-100">
                   <TableCell className="text-center">{contributors}</TableCell>
-                  <TableCell>{dataByTotalPoints[contributors]}</TableCell>
                   <TableCell>{dataByTotalIssues[contributors]}</TableCell>
+                  <TableCell>{dataByTotalPoints[contributors]}</TableCell>
+                  <TableCell>{dataByClosedIssues[contributors]}</TableCell>
+                  <TableCell>{dataByClosedPoints[contributors]}</TableCell>
                   <TableCell className="text-center">
                     <Dialog>
                       <DialogTrigger>
