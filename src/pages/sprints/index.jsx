@@ -33,6 +33,7 @@ export default function SprintsPage() {
 
         data.items.forEach((sprintData) => {
           const sprint = sprintData.content.sprint;
+          sprint['name'] = sprintData.name;
           sprints.push(sprint);
         });
         setDataBySprints(sprints);
