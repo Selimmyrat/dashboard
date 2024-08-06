@@ -1,7 +1,7 @@
 import {
   ArrowRight,
   HomeIcon,
-  LineChart,
+  // LineChart,
   LucideFileSpreadsheet,
   Triangle,
   User,
@@ -28,7 +28,7 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 // eslint-disable-next-line react/prop-types
 export default function Menu({ children }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return (
     <div className="grid h-screen w-full pl-[56px]">
       <aside className="inset-y fixed left-0 z-20 flex h-full flex-row border-r bg-white shadow-sm">
@@ -112,9 +112,7 @@ export default function Menu({ children }) {
                   <NavLink
                     to="/"
                     className={({ isActive }) =>
-                      isActive
-                        ? "bg-slate-100 rounded-xl"
-                        : ""
+                      isActive ? "bg-slate-100 rounded-xl" : ""
                     }
                     end
                   >
@@ -153,9 +151,7 @@ export default function Menu({ children }) {
                   <NavLink
                     to="/users"
                     className={({ isActive }) =>
-                      isActive
-                        ? "bg-slate-100 rounded-xl"
-                        : ""
+                      isActive ? "bg-slate-100 rounded-xl" : ""
                     }
                     end
                   >
@@ -194,9 +190,7 @@ export default function Menu({ children }) {
                   <NavLink
                     to="/sprints"
                     className={({ isActive }) =>
-                      isActive
-                        ? "bg-slate-100 rounded-xl"
-                        : ""
+                      isActive ? "bg-slate-100 rounded-xl" : ""
                     }
                     end
                   >
@@ -228,7 +222,7 @@ export default function Menu({ children }) {
                   </span>
                 </li>
               </Link>
-              <Link to="/auth">
+              {/* <Link to="/auth">
                 <li
                   className={`flex rounded-xl p-2 cursor-pointer hover:bg-slate-100 text-sm items-center 
           `}
@@ -268,7 +262,7 @@ export default function Menu({ children }) {
                     Analytics
                   </span>
                 </li>
-              </Link>
+              </Link> */}
             </ul>
           </div>
         </nav>

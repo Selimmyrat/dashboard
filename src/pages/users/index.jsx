@@ -153,8 +153,20 @@ export default function Users() {
                                       <TableCell className="text-center">
                                         <ProgressBar
                                           completed={sprint_data.progress}
-                                          bgColor={"#228B22"}
-                                          labelColor={"#228B22"}
+                                          bgColor={
+                                            sprint_data.progress <= 40
+                                              ? "red"
+                                              : sprint_data.progress <= 75
+                                              ? "yellow"
+                                              : "green"
+                                          }
+                                          labelColor={
+                                            sprint_data.progress <= 40
+                                              ? "red"
+                                              : sprint_data.progress <= 75
+                                              ? "yellow"
+                                              : "green"
+                                          }
                                         />
                                         {sprint_data.progress + "%"}
                                       </TableCell>

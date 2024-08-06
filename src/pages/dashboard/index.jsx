@@ -16,12 +16,46 @@ import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const [dataBySprint, setDataBySprint] = useState();
-  const [filterSprint, setFilterSprint] = useState();
+  const [filterSprint, setFilterSprint] = useState([]);
   const [dataByTotalIssues, setDataByTotalIssues] = useState();
   const [filterTotalIssues, setFilterTotalIssues] = useState();
   const [dataByProgress, setDataByProgress] = useState();
   const [filterProgress, setFilterProgress] = useState();
   const [dataByFWL, setDataByFWL] = useState({});
+
+  const [test, setTest] = useState();
+
+  useEffect(() => {
+    fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        const obj = {};
+        data.items.forEach((sprints) => {
+          const sprint = sprints.name;
+          if (!obj[sprint]) {
+            obj[sprint] = [];
+          }
+          obj[sprint].push(sprints);
+
+          const sprintChartData = [];
+          Object.entries(obj).map(([key, value]) => {
+            const chartObj = {};
+            chartObj.sprint = key;
+            value.map((item) => {
+              const member = item.team_member;
+              chartObj[member] = item.closed_points;
+              chartObj.fwl_number = item.fwl_number;
+            });
+            sprintChartData.push(chartObj);
+          })
+          setTest(sprintChartData);
+        });
+        // console.log("new", obj);
+      });
+    }, []);
+    console.log(test)
 
   useEffect(() => {
     fetch("https://pb.mekdep.org/api/collections/team_sprint_statistic/records")
@@ -38,6 +72,7 @@ export default function Dashboard() {
           }
           obj[sprint].push(element);
         });
+        console.log("old", obj);
 
         const sprintChartData = [];
         const totalIssues = [];
@@ -56,6 +91,7 @@ export default function Dashboard() {
         });
         setFilterSprint(sprintChartData);
         setDataBySprint(sprintChartData);
+        console.log("data old", sprintChartData);
 
         Object.entries(obj).map(([key, value]) => {
           const chartObj = {};
@@ -93,7 +129,6 @@ export default function Dashboard() {
           FWL[addFWL].push(element);
         });
         setDataByFWL(FWL);
-        console.log(FWL)
       });
   }, []);
   function change(e) {
@@ -176,17 +211,17 @@ export default function Dashboard() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-
                 <Line
                   type="monotone"
                   dataKey="akynyaz yazmyradov"
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
                 />
+
                 <Line
                   type="monotone"
                   dataKey="nazym maksadov"
-                  stroke="#82ca9d"
+                  stroke="#8884d8"
                   activeDot={{ r: 8 }}
                 />
               </LineChart>
