@@ -38,24 +38,27 @@ export default function Dashboard() {
             obj[sprint] = [];
           }
           obj[sprint].push(sprints);
-
           const sprintChartData = [];
           Object.entries(obj).map(([key, value]) => {
             const chartObj = {};
             chartObj.sprint = key;
             value.map((item) => {
-              const member = item.team_member;
-              chartObj[member] = item.closed_points;
-              chartObj.fwl_number = item.fwl_number;
+              const members = item.content.sprint.contributors;
+              const membersClosedPts = {};
+              Object.entries(members).map(([k, val]) => {
+                membersClosedPts[k] = val.closed_pts;
+              });
+              chartObj.fwl_number = item.fwl;
+              chartObj.members = membersClosedPts
             });
             sprintChartData.push(chartObj);
-          })
+          });
           setTest(sprintChartData);
+          console.log(sprintChartData);
         });
-        // console.log("new", obj);
       });
-    }, []);
-    console.log(test)
+  }, []);
+  console.log("test", test);
 
   useEffect(() => {
     fetch("https://pb.mekdep.org/api/collections/team_sprint_statistic/records")
@@ -198,7 +201,7 @@ export default function Dashboard() {
               <LineChart
                 width={500}
                 height={300}
-                data={filterSprint}
+                data={test}
                 margin={{
                   top: 5,
                   right: 30,
@@ -207,23 +210,26 @@ export default function Dashboard() {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sprint" />
+                <XAxis dataKey='sprint' />
                 <YAxis />
                 <Tooltip />
                 <Legend />
+               {
+                
+               }
                 <Line
                   type="monotone"
-                  dataKey="akynyaz yazmyradov"
+                  dataKey=''
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
                 />
 
-                <Line
+                {/* <Line
                   type="monotone"
                   dataKey="nazym maksadov"
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
-                />
+                /> */}
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
