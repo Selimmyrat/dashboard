@@ -24,7 +24,7 @@ export default function SprintsPage() {
   const [dataBySprints, setDataBySprints] = useState(null);
 
   useEffect(() => {
-    fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records")
+    fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records?sort=-name")
       .then((res) => {
         return res.json();
       })
