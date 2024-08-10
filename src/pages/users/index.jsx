@@ -26,6 +26,7 @@ export default function Users() {
   const [dataByTotalIssues, setDataByTotalIssues] = useState({});
   const [dataByClosedIssues, setDataByClosedIssues] = useState({});
   const [dataByClosedPoints, setDataByClosedPoints] = useState({});
+  const [dataBySSPoints, setDataBySSPoints] = useState({});
 
   useEffect(() => {
     fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records?sort=-name")
@@ -38,8 +39,10 @@ export default function Users() {
         const totalIssuesObj = {};
         const closedIssuesObj = {};
         const closedPointsObj = {};
-        data.items.forEach((cons) => {
-          const members = cons.content.sprint.contributors;
+        const ssPointsObj = {};
+
+        data.items.forEach((sprint) => {
+          const members = sprint.content.sprint.contributors;
           Object.keys(members).forEach((member) => {
             if (!obj[member]) {
               obj[member] = [];
@@ -47,7 +50,7 @@ export default function Users() {
 
             obj[member].push({
               ...members[member],
-              sprintName: cons.name,
+              sprintName: sprint.name,
             });
 
             if (!totalPtsObj[member]) {
@@ -69,6 +72,11 @@ export default function Users() {
               closedPointsObj[member] = 0;
             }
             closedPointsObj[member] += members[member].closed_pts;
+
+            if (!ssPointsObj[member]) {
+              ssPointsObj[member] = 0;
+            }
+            ssPointsObj[member] += members[member].ss_pts;
           });
         });
         setDataByUsers(obj);
@@ -76,6 +84,7 @@ export default function Users() {
         setDataByTotalIssues(totalIssuesObj);
         setDataByClosedIssues(closedIssuesObj);
         setDataByClosedPoints(closedPointsObj);
+        setDataBySSPoints(ssPointsObj);
       });
   }, []);
 
@@ -89,19 +98,21 @@ export default function Users() {
             <TableHead className="text-center">Total Points</TableHead>
             <TableHead className="text-center">Closed Issues</TableHead>
             <TableHead className="text-center">Closed Points</TableHead>
+            <TableHead className="text-center">SS Points</TableHead>
             <TableHead className="text-center">Gor</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="text-center">
           {Object.entries(dataByUsers).map(
-            ([contributors, contributorValue]) => {
+            ([contributor, contributorValue]) => {
               return (
-                <TableRow key={contributors} className="hover:bg-slate-100">
-                  <TableCell className="text-center">{contributors}</TableCell>
-                  <TableCell>{dataByTotalIssues[contributors]}</TableCell>
-                  <TableCell>{dataByTotalPoints[contributors]}</TableCell>
-                  <TableCell>{dataByClosedIssues[contributors]}</TableCell>
-                  <TableCell>{dataByClosedPoints[contributors]}</TableCell>
+                <TableRow key={contributor} className="hover:bg-slate-100">
+                  <TableCell className="text-center">{contributor}</TableCell>
+                  <TableCell>{dataByTotalIssues[contributor]}</TableCell>
+                  <TableCell>{dataByTotalPoints[contributor]}</TableCell>
+                  <TableCell>{dataByClosedIssues[contributor]}</TableCell>
+                  <TableCell>{dataByClosedPoints[contributor]}</TableCell>
+                  <TableCell>{dataBySSPoints[contributor]}</TableCell>
                   <TableCell className="text-center">
                     <Dialog>
                       <DialogTrigger>
@@ -109,7 +120,7 @@ export default function Users() {
                       </DialogTrigger>
                       <DialogContent className="max-w-[1400px] w-full p-6 sm:p-8 md:p-10 lg:p-12 bg-white">
                         <DialogHeader>
-                          <DialogTitle>{contributors}</DialogTitle>
+                          <DialogTitle>{contributor}</DialogTitle>
                           <DialogDescription>
                             <Table>
                               <TableHeader className="text-center">

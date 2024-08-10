@@ -15,30 +15,27 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  // const [dataBySprint, setDataBySprint] = useState();
-  // const [filterSprint, setFilterSprint] = useState([]);
-  // const [dataByTotalIssues, setDataByTotalIssues] = useState();
-  // const [filterTotalIssues, setFilterTotalIssues] = useState();
-  // const [dataByProgress, setDataByProgress] = useState();
-  // const [filterProgress, setFilterProgress] = useState();
-  // const [dataByFWL, setDataByFWL] = useState({});
-
   const [closedPtsData, setClosedPtsData] = useState(null);
   const [closedPtsDataFilter, setClosedPtsDataFilter] = useState([]);
-  
+
   const [totalPtsData, setTotalPtsData] = useState(null);
   const [totalPtsDataFilter, setTotalPtsDataFilter] = useState([]);
-  
+
   const [closedIssuesData, setClosedIssuesData] = useState(null);
   const [closedIssuesDataFilter, setClosedIssuesDataFilter] = useState([]);
-  
+
   const [totalIssuesData, setTotalIssuesData] = useState(null);
   const [totalIssuesDataFilter, setTotalIssuesDataFilter] = useState([]);
-  
+
   const [progressData, setProgressData] = useState(null);
   const [progressDataFilter, setProgressDataFilter] = useState([]);
-  
+
+  const [SSPointsData, setSSPointsData] = useState(null);
+  const [SSPointsDataFilter, setSSPointsDataFilter] = useState([]);
+
   const [fwls, setFwls] = useState({});
+
+  const [colors, setColors] = useState({});
 
   useEffect(() => {
     fetch(
@@ -48,12 +45,13 @@ export default function Dashboard() {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         const closedPtsArr = [];
         const totalPtsArr = [];
         const closedIssuesArr = [];
         const totalIssuesArr = [];
         const progressArr = [];
+        const SSPointsArr = [];
+        const colorsObj = {};
 
         data.items.map((sprint) => {
           const closedPtsObj = {};
@@ -76,6 +74,10 @@ export default function Dashboard() {
           progressObj["sprint"] = sprint.name;
           progressObj["fwl"] = sprint.fwl;
 
+          const SSPointsObj = {};
+          SSPointsObj["sprint"] = sprint.name;
+          SSPointsObj["fwl"] = sprint.fwl;
+
           Object.entries(sprint.content.sprint.contributors).map(
             ([contributor, contributorData]) => {
               closedPtsObj[contributor] = contributorData.closed_pts;
@@ -83,6 +85,8 @@ export default function Dashboard() {
               closedIssuesObj[contributor] = contributorData.closed_issues;
               totalIssuesObj[contributor] = contributorData.total_issues;
               progressObj[contributor] = contributorData.progress;
+              SSPointsObj[contributor] = contributorData.ss_pts;
+              colorsObj[contributor] = contributorData.color;
             }
           );
 
@@ -91,6 +95,7 @@ export default function Dashboard() {
           closedIssuesArr.push(closedIssuesObj);
           totalIssuesArr.push(totalIssuesObj);
           progressArr.push(progressObj);
+          SSPointsArr.push(SSPointsObj);
         });
         setClosedPtsData(closedPtsArr);
         setClosedPtsDataFilter(closedPtsArr);
@@ -107,6 +112,11 @@ export default function Dashboard() {
         setProgressData(progressArr);
         setProgressDataFilter(progressArr);
 
+        setSSPointsData(SSPointsArr);
+        setSSPointsDataFilter(SSPointsArr);
+
+        setColors(colorsObj);
+
         const fwlObj = {};
         data.items.forEach((fwl) => {
           const fwlNum = fwl.fwl;
@@ -114,13 +124,19 @@ export default function Dashboard() {
           fwlObj[fwlNum] = "FWL " + fwlNum;
         });
         setFwls(fwlObj);
-        // Object.entries(data.items[0].sprint.content.sprint.contributors).map(
-        //   ([item, value]) => {
-        //     colors[item] = value.color;
-        //   }
-        // );
       });
   }, []);
+
+  // useEffect(() => {
+  //   console.log(closedPtsData)
+  // }, [closedPtsData])
+  //   function getColorByContributor(contributorName) {
+  //     var color = colors[contributorName]
+  //     if (!color) {
+  //         return 'black'
+  //     }
+  //     return color
+  // }
 
   function handleFilterChangeFWL(e) {
     if (e.target.value === "default") {
@@ -129,6 +145,7 @@ export default function Dashboard() {
       setClosedIssuesDataFilter(closedIssuesData);
       setTotalIssuesDataFilter(totalIssuesData);
       setProgressDataFilter(progressData);
+      setSSPointsDataFilter(SSPointsData);
     } else {
       setClosedPtsDataFilter(
         closedPtsData.filter((item) => item.fwl === e.target.value)
@@ -145,16 +162,19 @@ export default function Dashboard() {
       setProgressDataFilter(
         progressData.filter((item) => item.fwl === e.target.value)
       );
+      setSSPointsDataFilter(
+        SSPointsData.filter((item) => item.fwl === e.target.value)
+      );
     }
   }
 
-  const colors = {
-    NaZyM0101: "#F44611",
-    Selimmyrat: "#D6AE01",
-    Sohbetbackend: "#6C7156",
-    TagandurdyB: "#1C1C1C",
-    akynyaz: "#BEBD7F",
-  };
+  // const colors = {
+  //   NaZyM0101: "#F44611",
+  //   Selimmyrat: "#D6AE01",
+  //   Sohbetbackend: "#6C7156",
+  //   TagandurdyB: "#1C1C1C",
+  //   akynyaz: "#BEBD7F",
+  // };
 
   if (closedPtsData === null) {
     return "Loading...";
@@ -198,16 +218,16 @@ export default function Dashboard() {
         </Card>
       </div> */}
 
-      {/* Closed Points Chart */}
-      <div className="mt-2 grid grid-cols-2 gap-4">
+      {/* Total Issues Chart */}
+      <div className="mt-5 grid grid-cols-2 gap-4">
         <Card className="bg-white boreder shadow">
-          <CardHeader>Closed Points</CardHeader>
+          <CardHeader>Total Issues</CardHeader>
           <CardContent className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 width={500}
                 height={300}
-                data={closedPtsDataFilter}
+                data={totalIssuesDataFilter}
                 margin={{
                   top: 5,
                   right: 30,
@@ -220,8 +240,9 @@ export default function Dashboard() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                {closedPtsDataFilter &&
-                  Object.keys(closedPtsDataFilter[0]).map((member, index) => {
+
+                {totalIssuesDataFilter &&
+                  Object.keys(totalIssuesDataFilter[0]).map((member, index) => {
                     if (member !== "fwl" && member !== "sprint") {
                       return (
                         <Line
@@ -240,17 +261,17 @@ export default function Dashboard() {
         </Card>
 
         <Card className="bg-white boreder shadow">
-          <CardHeader>Closed Points</CardHeader>
+          <CardHeader>Total Issues</CardHeader>
           <CardContent className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart width={500} height={300} data={closedPtsDataFilter}>
+              <BarChart width={150} height={40} data={totalIssuesDataFilter}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="sprint" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                {closedPtsDataFilter &&
-                  Object.keys(closedPtsDataFilter[0]).map((member, index) => {
+                {totalIssuesDataFilter &&
+                  Object.keys(totalIssuesDataFilter[0]).map((member, index) => {
                     if (member !== "fwl" && member !== "sprint") {
                       return (
                         <Bar
@@ -336,76 +357,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Progress Chart */}
-      <div className="mt-5 grid grid-cols-2 gap-4">
-        <Card className="bg-white boreder shadow">
-          <CardHeader>Progress</CardHeader>
-          <CardContent className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                width={500}
-                height={300}
-                data={progressDataFilter}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sprint" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-
-                {progressDataFilter &&
-                  Object.keys(progressDataFilter[0]).map((member, index) => {
-                    if (member !== "fwl" && member !== "sprint") {
-                      return (
-                        <Line
-                          key={index}
-                          type="monotone"
-                          dataKey={member}
-                          stroke={colors[member]}
-                          activeDot={{ r: 8 }}
-                        />
-                      );
-                    }
-                  })}
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white boreder shadow">
-          <CardHeader>Progress</CardHeader>
-          <CardContent className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart width={150} height={40} data={progressDataFilter}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sprint" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {progressDataFilter &&
-                  Object.keys(progressDataFilter[0]).map((member, index) => {
-                    if (member !== "fwl" && member !== "sprint") {
-                      return (
-                        <Bar
-                          key={index}
-                          dataKey={member}
-                          fill={colors[member]}
-                        />
-                      );
-                    }
-                  })}
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Closed Issues Chart */}
       <div className="mt-5 grid grid-cols-2 gap-4">
         <Card className="bg-white boreder shadow">
@@ -479,16 +430,16 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Total Issues Chart */}
-      <div className="mt-5 grid grid-cols-2 gap-4">
+      {/* Closed Points Chart */}
+      <div className="mt-2 grid grid-cols-2 gap-4">
         <Card className="bg-white boreder shadow">
-          <CardHeader>Total Issues</CardHeader>
+          <CardHeader>Closed Points</CardHeader>
           <CardContent className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 width={500}
                 height={300}
-                data={totalIssuesDataFilter}
+                data={closedPtsDataFilter}
                 margin={{
                   top: 5,
                   right: 30,
@@ -501,9 +452,8 @@ export default function Dashboard() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-
-                {totalIssuesDataFilter &&
-                  Object.keys(totalIssuesDataFilter[0]).map((member, index) => {
+                {closedPtsDataFilter &&
+                  Object.keys(closedPtsDataFilter[0]).map((member, index) => {
                     if (member !== "fwl" && member !== "sprint") {
                       return (
                         <Line
@@ -522,17 +472,157 @@ export default function Dashboard() {
         </Card>
 
         <Card className="bg-white boreder shadow">
-          <CardHeader>Total Issues</CardHeader>
+          <CardHeader>Closed Points</CardHeader>
           <CardContent className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart width={150} height={40} data={totalIssuesDataFilter}>
+              <BarChart width={500} height={300} data={closedPtsDataFilter}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="sprint" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                {totalIssuesDataFilter &&
-                  Object.keys(totalIssuesDataFilter[0]).map((member, index) => {
+                {closedPtsDataFilter &&
+                  Object.keys(closedPtsDataFilter[0]).map((member, index) => {
+                    if (member !== "fwl" && member !== "sprint") {
+                      return (
+                        <Bar
+                          key={index}
+                          dataKey={member}
+                          fill={colors[member]}
+                        />
+                      );
+                    }
+                  })}
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Progress Chart */}
+      <div className="mt-5 grid grid-cols-2 gap-4">
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Progress</CardHeader>
+          <CardContent className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                width={500}
+                height={300}
+                data={progressDataFilter}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+
+                {progressDataFilter &&
+                  Object.keys(progressDataFilter[0]).map((member, index) => {
+                    if (member !== "fwl" && member !== "sprint") {
+                      return (
+                        <Line
+                          key={index}
+                          type="monotone"
+                          dataKey={member}
+                          stroke={colors[member]}
+                          activeDot={{ r: 8 }}
+                        />
+                      );
+                    }
+                  })}
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Progress</CardHeader>
+          <CardContent className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={progressDataFilter}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {progressDataFilter &&
+                  Object.keys(progressDataFilter[0]).map((member, index) => {
+                    if (member !== "fwl" && member !== "sprint") {
+                      return (
+                        <Bar
+                          key={index}
+                          dataKey={member}
+                          fill={colors[member]}
+                        />
+                      );
+                    }
+                  })}
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* SS Points */}
+      <div className="mt-5 grid grid-cols-2 gap-4">
+        <Card className="bg-white boreder shadow">
+          <CardHeader>SS Points</CardHeader>
+          <CardContent className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                width={500}
+                height={300}
+                data={SSPointsDataFilter}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+
+                {SSPointsDataFilter &&
+                  Object.keys(SSPointsDataFilter[0]).map((member, index) => {
+                    if (member !== "fwl" && member !== "sprint") {
+                      return (
+                        <Line
+                          key={index}
+                          type="monotone"
+                          dataKey={member}
+                          stroke={colors[member]}
+                          activeDot={{ r: 8 }}
+                        />
+                      );
+                    }
+                  })}
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white boreder shadow">
+          <CardHeader>SS Points</CardHeader>
+          <CardContent className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={SSPointsDataFilter}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {SSPointsDataFilter &&
+                  Object.keys(SSPointsDataFilter[0]).map((member, index) => {
                     if (member !== "fwl" && member !== "sprint") {
                       return (
                         <Bar
