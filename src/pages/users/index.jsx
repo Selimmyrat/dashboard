@@ -29,7 +29,7 @@ export default function Users() {
   const [dataBySSPoints, setDataBySSPoints] = useState({});
 
   useEffect(() => {
-    fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records?sort=-name")
+    fetch("https://pb.mekdep.org/api/collections/sprint_statistic/records?filter=(fwl='3')&sort=-name")
       .then((res) => {
         return res.json();
       })

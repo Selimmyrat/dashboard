@@ -363,35 +363,6 @@ export default function Dashboard() {
           <CardHeader>Closed Issues</CardHeader>
           <CardContent className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart width={150} height={40} data={closedIssuesDataFilter}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sprint" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {closedIssuesDataFilter &&
-                  Object.keys(closedIssuesDataFilter[0]).map(
-                    (member, index) => {
-                      if (member !== "fwl" && member !== "sprint") {
-                        return (
-                          <Bar
-                            key={index}
-                            dataKey={member}
-                            fill={colors[member]}
-                          />
-                        );
-                      }
-                    }
-                  )}
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white boreder shadow">
-          <CardHeader>Closed Issues</CardHeader>
-          <CardContent className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 width={500}
                 height={300}
@@ -428,10 +399,66 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Closed Issues</CardHeader>
+          <CardContent className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={closedIssuesDataFilter}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {closedIssuesDataFilter &&
+                  Object.keys(closedIssuesDataFilter[0]).map(
+                    (member, index) => {
+                      if (member !== "fwl" && member !== "sprint") {
+                        return (
+                          <Bar
+                            key={index}
+                            dataKey={member}
+                            fill={colors[member]}
+                          />
+                        );
+                      }
+                    }
+                  )}
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Closed Points Chart */}
       <div className="mt-2 grid grid-cols-2 gap-4">
+        <Card className="bg-white boreder shadow">
+          <CardHeader>Closed Points</CardHeader>
+          <CardContent className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={500} height={300} data={closedPtsDataFilter}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {closedPtsDataFilter &&
+                  Object.keys(closedPtsDataFilter[0]).map((member, index) => {
+                    if (member !== "fwl" && member !== "sprint") {
+                      return (
+                        <Bar
+                          key={index}
+                          dataKey={member}
+                          fill={colors[member]}
+                        />
+                      );
+                    }
+                  })}
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
         <Card className="bg-white boreder shadow">
           <CardHeader>Closed Points</CardHeader>
           <CardContent className="h-80 w-full">
@@ -467,33 +494,6 @@ export default function Dashboard() {
                     }
                   })}
               </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white boreder shadow">
-          <CardHeader>Closed Points</CardHeader>
-          <CardContent className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart width={500} height={300} data={closedPtsDataFilter}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sprint" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {closedPtsDataFilter &&
-                  Object.keys(closedPtsDataFilter[0]).map((member, index) => {
-                    if (member !== "fwl" && member !== "sprint") {
-                      return (
-                        <Bar
-                          key={index}
-                          dataKey={member}
-                          fill={colors[member]}
-                        />
-                      );
-                    }
-                  })}
-              </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -575,6 +575,33 @@ export default function Dashboard() {
           <CardHeader>SS Points</CardHeader>
           <CardContent className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
+              <BarChart width={150} height={40} data={SSPointsDataFilter}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sprint" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {SSPointsDataFilter &&
+                  Object.keys(SSPointsDataFilter[0]).map((member, index) => {
+                    if (member !== "fwl" && member !== "sprint") {
+                      return (
+                        <Bar
+                          key={index}
+                          dataKey={member}
+                          fill={colors[member]}
+                        />
+                      );
+                    }
+                  })}
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white boreder shadow">
+          <CardHeader>SS Points</CardHeader>
+          <CardContent className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 width={500}
                 height={300}
@@ -607,33 +634,6 @@ export default function Dashboard() {
                     }
                   })}
               </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white boreder shadow">
-          <CardHeader>SS Points</CardHeader>
-          <CardContent className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart width={150} height={40} data={SSPointsDataFilter}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sprint" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {SSPointsDataFilter &&
-                  Object.keys(SSPointsDataFilter[0]).map((member, index) => {
-                    if (member !== "fwl" && member !== "sprint") {
-                      return (
-                        <Bar
-                          key={index}
-                          dataKey={member}
-                          fill={colors[member]}
-                        />
-                      );
-                    }
-                  })}
-              </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
