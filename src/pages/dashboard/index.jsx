@@ -125,7 +125,6 @@ export default function Dashboard() {
 
           console.log(contributorsBox)
 
-          console.log('', )
           totalIssuesArr.push(totalIssuesObj);
           totalPtsArr.push(totalPtsObj);
           closedPtsArr.push(closedPtsObj);
