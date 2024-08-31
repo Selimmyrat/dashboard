@@ -15,6 +15,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
+  const [totalIssuesData, setTotalIssuesData] = useState(null);
+  const [totalIssuesDataFilter, setTotalIssuesDataFilter] = useState([]);
+
   const [closedPtsData, setClosedPtsData] = useState(null);
   const [closedPtsDataFilter, setClosedPtsDataFilter] = useState([]);
 
@@ -23,9 +26,6 @@ export default function Dashboard() {
 
   const [closedIssuesData, setClosedIssuesData] = useState(null);
   const [closedIssuesDataFilter, setClosedIssuesDataFilter] = useState([]);
-
-  const [totalIssuesData, setTotalIssuesData] = useState(null);
-  const [totalIssuesDataFilter, setTotalIssuesDataFilter] = useState([]);
 
   const [progressData, setProgressData] = useState(null);
   const [progressDataFilter, setProgressDataFilter] = useState([]);
@@ -45,69 +45,106 @@ export default function Dashboard() {
         return res.json();
       })
       .then((data) => {
-        const closedPtsArr = [];
+        const totalIssuesArr = [];
         const totalPtsArr = [];
         const closedIssuesArr = [];
-        const totalIssuesArr = [];
+        const closedPtsArr = [];
         const progressArr = [];
         const SSPointsArr = [];
         const colorsObj = {};
+        const contributorsBox = [];
 
-        data.items.map((sprint) => {
-          const closedPtsObj = {};
-          closedPtsObj["sprint"] = sprint.name;
-          closedPtsObj["fwl"] = sprint.fwl;
+        // get all contributors & set
+        data.items.map((sprints) => {
+          Object.keys(sprints.content.sprint.contributors).map(
+            (contributor) => {
+              if (!contributorsBox.includes(contributor)) {
+                contributorsBox.push(contributor);
+              }
+            }
+          );
+        })
+
+        data.items.map((sprints) => {
+          const totalIssuesObj = {};
+          totalIssuesObj["sprint"] = sprints.name;
+          totalIssuesObj["fwl"] = sprints.fwl;
 
           const totalPtsObj = {};
-          totalPtsObj["sprint"] = sprint.name;
-          totalPtsObj["fwl"] = sprint.fwl;
+          totalPtsObj["sprint"] = sprints.name;
+          totalPtsObj["fwl"] = sprints.fwl;
 
           const closedIssuesObj = {};
-          closedIssuesObj["sprint"] = sprint.name;
-          closedIssuesObj["fwl"] = sprint.fwl;
+          closedIssuesObj["sprint"] = sprints.name;
+          closedIssuesObj["fwl"] = sprints.fwl;
 
-          const totalIssuesObj = {};
-          totalIssuesObj["sprint"] = sprint.name;
-          totalIssuesObj["fwl"] = sprint.fwl;
+          const closedPtsObj = {};
+          closedPtsObj["sprint"] = sprints.name;
+          closedPtsObj["fwl"] = sprints.fwl;
 
           const progressObj = {};
-          progressObj["sprint"] = sprint.name;
-          progressObj["fwl"] = sprint.fwl;
+          progressObj["sprint"] = sprints.name;
+          progressObj["fwl"] = sprints.fwl;
 
           const SSPointsObj = {};
-          SSPointsObj["sprint"] = sprint.name;
-          SSPointsObj["fwl"] = sprint.fwl;
+          SSPointsObj["sprint"] = sprints.name;
+          SSPointsObj["fwl"] = sprints.fwl;
 
-          Object.entries(sprint.content.sprint.contributors).map(
+          Object.entries(sprints.content.sprint.contributors).map(
             ([contributor, contributorData]) => {
-              closedPtsObj[contributor] = contributorData.closed_pts;
+              totalIssuesObj[contributor] = contributorData.total_issues;
               totalPtsObj[contributor] = contributorData.total_pts;
               closedIssuesObj[contributor] = contributorData.closed_issues;
-              totalIssuesObj[contributor] = contributorData.total_issues;
+              closedPtsObj[contributor] = contributorData.closed_pts;
               progressObj[contributor] = contributorData.progress;
               SSPointsObj[contributor] = contributorData.ss_pts;
               colorsObj[contributor] = contributorData.color;
             }
           );
 
-          closedPtsArr.push(closedPtsObj);
-          totalPtsArr.push(totalPtsObj);
-          closedIssuesArr.push(closedIssuesObj);
+          contributorsBox.map((contributor) => {
+            if(!totalIssuesObj[contributor]){
+              totalIssuesObj[contributor] = 0;
+            }
+            if(!totalPtsObj[contributor]){
+              totalPtsObj[contributor] = 0;
+            }
+            if(!closedPtsObj[contributor]){
+              closedPtsObj[contributor] = 0;
+            }
+            if(!closedIssuesObj[contributor]){
+              closedIssuesObj[contributor] = 0;
+            }
+            if(!progressObj[contributor]){
+              progressObj[contributor] = 0;
+            }
+            if(!SSPointsObj[contributor]){
+              SSPointsObj[contributor] = 0;
+            }
+          })
+
+          console.log(contributorsBox)
+
+          console.log('', )
           totalIssuesArr.push(totalIssuesObj);
+          totalPtsArr.push(totalPtsObj);
+          closedPtsArr.push(closedPtsObj);
+          closedIssuesArr.push(closedIssuesObj);
           progressArr.push(progressObj);
           SSPointsArr.push(SSPointsObj);
         });
-        setClosedPtsData(closedPtsArr);
-        setClosedPtsDataFilter(closedPtsArr);
+
+        setTotalIssuesData(totalIssuesArr);
+        setTotalIssuesDataFilter(totalIssuesArr);
 
         setTotalPtsData(totalPtsArr);
         setTotalPtsDataFilter(totalPtsArr);
 
+        setClosedPtsData(closedPtsArr);
+        setClosedPtsDataFilter(closedPtsArr);
+
         setClosedIssuesData(closedIssuesArr);
         setClosedIssuesDataFilter(closedIssuesArr);
-
-        setTotalIssuesData(totalIssuesArr);
-        setTotalIssuesDataFilter(totalIssuesArr);
 
         setProgressData(progressArr);
         setProgressDataFilter(progressArr);
@@ -127,6 +164,10 @@ export default function Dashboard() {
       });
   }, []);
 
+  useEffect(() => {
+    console.log(totalIssuesData)
+  }, [totalIssuesData])
+
   // useEffect(() => {
   //   console.log(closedPtsData)
   // }, [closedPtsData])
@@ -140,15 +181,15 @@ export default function Dashboard() {
 
   function handleFilterChangeFWL(e) {
     if (e.target.value === "default") {
-      setClosedPtsDataFilter(closedPtsData);
+      setTotalIssuesDataFilter(totalIssuesData);
       setTotalPtsDataFilter(totalPtsData);
       setClosedIssuesDataFilter(closedIssuesData);
-      setTotalIssuesDataFilter(totalIssuesData);
+      setClosedPtsDataFilter(closedPtsData);
       setProgressDataFilter(progressData);
       setSSPointsDataFilter(SSPointsData);
     } else {
-      setClosedPtsDataFilter(
-        closedPtsData.filter((item) => item.fwl === e.target.value)
+      setTotalIssuesDataFilter(
+        totalIssuesData.filter((item) => item.fwl === e.target.value)
       );
       setTotalPtsDataFilter(
         totalPtsData.filter((item) => item.fwl === e.target.value)
@@ -156,8 +197,8 @@ export default function Dashboard() {
       setClosedIssuesDataFilter(
         closedIssuesData.filter((item) => item.fwl === e.target.value)
       );
-      setTotalIssuesDataFilter(
-        totalIssuesData.filter((item) => item.fwl === e.target.value)
+      setClosedPtsDataFilter(
+        closedPtsData.filter((item) => item.fwl === e.target.value)
       );
       setProgressDataFilter(
         progressData.filter((item) => item.fwl === e.target.value)
@@ -183,12 +224,12 @@ export default function Dashboard() {
   return (
     <>
       <div className="border bg-white shadow p-2 flex flex-row items-center gap-1">
-        <p>FWL saylan:</p>
+        <p>Choose FWL:</p>
         <select
           className="bg-white border shadow-none p-2"
           onChange={handleFilterChangeFWL}
         >
-          <option value="default">Ahlisi</option>
+          <option value="default">All</option>
           {Object.entries(fwls).map(([key, value]) => (
             <option key={key} value={key}>
               {value}
@@ -431,7 +472,7 @@ export default function Dashboard() {
       </div>
 
       {/* Closed Points Chart */}
-      <div className="mt-2 grid grid-cols-2 gap-4">
+      <div className="mt-5 grid grid-cols-2 gap-4">
         <Card className="bg-white boreder shadow">
           <CardHeader>Closed Points</CardHeader>
           <CardContent className="h-80 w-full">
@@ -570,7 +611,7 @@ export default function Dashboard() {
       </div>
 
       {/* SS Points */}
-      <div className="mt-5 grid grid-cols-2 gap-4">
+      <div className="mt-5 pb-5 grid grid-cols-2 gap-4">
         <Card className="bg-white boreder shadow">
           <CardHeader>SS Points</CardHeader>
           <CardContent className="h-80 w-full">
