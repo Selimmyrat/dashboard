@@ -13,6 +13,8 @@ import {
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useEffect, useState } from "react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function Dashboard() {
   const [totalIssuesData, setTotalIssuesData] = useState(null);
@@ -37,7 +39,10 @@ export default function Dashboard() {
 
   const [colors, setColors] = useState({});
 
-  useEffect(() => {
+  const [isChecked, setChecked] = useState(true);
+  const [timer, setTimer] = useState(10);
+
+  const fetchData = () => {
     fetch(
       "https://pb.mekdep.org/api/collections/sprint_statistic/records?sort=name"
     )
@@ -63,7 +68,7 @@ export default function Dashboard() {
               }
             }
           );
-        })
+        });
 
         data.items.map((sprints) => {
           const totalIssuesObj = {};
@@ -103,27 +108,25 @@ export default function Dashboard() {
           );
 
           contributorsBox.map((contributor) => {
-            if(!totalIssuesObj[contributor]){
+            if (!totalIssuesObj[contributor]) {
               totalIssuesObj[contributor] = 0;
             }
-            if(!totalPtsObj[contributor]){
+            if (!totalPtsObj[contributor]) {
               totalPtsObj[contributor] = 0;
             }
-            if(!closedPtsObj[contributor]){
+            if (!closedPtsObj[contributor]) {
               closedPtsObj[contributor] = 0;
             }
-            if(!closedIssuesObj[contributor]){
+            if (!closedIssuesObj[contributor]) {
               closedIssuesObj[contributor] = 0;
             }
-            if(!progressObj[contributor]){
+            if (!progressObj[contributor]) {
               progressObj[contributor] = 0;
             }
-            if(!SSPointsObj[contributor]){
+            if (!SSPointsObj[contributor]) {
               SSPointsObj[contributor] = 0;
             }
-          })
-
-          console.log(contributorsBox)
+          });
 
           totalIssuesArr.push(totalIssuesObj);
           totalPtsArr.push(totalPtsObj);
@@ -161,22 +164,28 @@ export default function Dashboard() {
         });
         setFwls(fwlObj);
       });
-  }, []);
+  };
 
   useEffect(() => {
-    console.log(totalIssuesData)
-  }, [totalIssuesData])
+    if (isChecked) {
+      fetchData();
+      const intervalId = setInterval(() => {
+        fetchData();
+      }, 10000);
 
-  // useEffect(() => {
-  //   console.log(closedPtsData)
-  // }, [closedPtsData])
-  //   function getColorByContributor(contributorName) {
-  //     var color = colors[contributorName]
-  //     if (!color) {
-  //         return 'black'
-  //     }
-  //     return color
-  // }
+      const timerId = setInterval(() => {
+        setTimer((prevTimer) => (prevTimer > 1 ? prevTimer - 1 : 10))
+      }, 1000)
+
+      return () => {
+        clearInterval(intervalId);
+        clearInterval(timerId)
+      }
+    } else {
+      fetchData();
+      setTimer(10)
+    }
+  }, [isChecked]);
 
   function handleFilterChangeFWL(e) {
     if (e.target.value === "default") {
@@ -208,55 +217,33 @@ export default function Dashboard() {
     }
   }
 
-  // const colors = {
-  //   NaZyM0101: "#F44611",
-  //   Selimmyrat: "#D6AE01",
-  //   Sohbetbackend: "#6C7156",
-  //   TagandurdyB: "#1C1C1C",
-  //   akynyaz: "#BEBD7F",
-  // };
-
   if (closedPtsData === null) {
     return "Loading...";
   }
 
   return (
     <>
-      <div className="border bg-white shadow p-2 flex flex-row items-center gap-1">
-        <p>Choose FWL:</p>
-        <select
-          className="bg-white border shadow-none p-2"
-          onChange={handleFilterChangeFWL}
-        >
-          <option value="default">All</option>
-          {Object.entries(fwls).map(([key, value]) => (
-            <option key={key} value={key}>
-              {value}
-            </option>
-          ))}
-        </select>
+      {/* Filter */}
+      <div className="border bg-white shadow p-2 flex justify-between flex-row items-center gap-1">
+        <div className="flex flex-row items-center gap-2">
+          <p>Choose FWL:</p>
+          <select
+            className="bg-white border shadow-none p-2"
+            onChange={handleFilterChangeFWL}
+          >
+            <option value="default">All</option>
+            {Object.entries(fwls).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-row items-center gap-2">
+          <Switch id="autoRefresh" checked={isChecked} onCheckedChange={setChecked} />
+          <Label htmlFor="autoRefresh">Auto Refresh: {timer}s</Label>
+        </div>
       </div>
-      {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border bg-white shadow">
-          <CardHeader>Issues</CardHeader>
-          <CardContent>sss</CardContent>
-        </Card>
-
-        <Card className="border bg-white shadow">
-          <CardHeader>Issues</CardHeader>
-          <CardContent>sss</CardContent>
-        </Card>
-
-        <Card className="border bg-white shadow">
-          <CardHeader>Issues</CardHeader>
-          <CardContent>sss</CardContent>
-        </Card>
-
-        <Card className="border bg-white shadow">
-          <CardHeader>Issues</CardHeader>
-          <CardContent>sss</CardContent>
-        </Card>
-      </div> */}
 
       {/* Total Issues Chart */}
       <div className="mt-5 grid grid-cols-2 gap-4">
